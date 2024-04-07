@@ -2,7 +2,8 @@ enum RadioMessage {
     message1 = 49434,
     Alarm1 = 42306,
     Alarm2 = 41318,
-    Alarmstate0 = 7740
+    Alarmstate0 = 7740,
+    Pairverify = 63623
 }
 input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
     radio.sendMessage(RadioMessage.Alarm1)
@@ -18,9 +19,10 @@ radio.onReceivedMessage(RadioMessage.Alarm2, function () {
         `)
     music.playMelody("C5 - C5 - - - - - ", 120)
 })
-input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
-    radio.sendMessage(RadioMessage.Alarmstate0)
+radio.onReceivedMessage(RadioMessage.Pairverify, function () {
     basic.showIcon(IconNames.Heart)
+    basic.pause(1000)
+    basic.clearScreen()
     control.reset()
 })
 input.onGesture(Gesture.Shake, function () {
@@ -39,6 +41,9 @@ input.onGesture(Gesture.Shake, function () {
         control.reset()
     }
 })
+/**
+ * Alarm getting rdy
+ */
 radio.onReceivedMessage(RadioMessage.Alarm1, function () {
     basic.setLedColors(0xff0000, 0x00ff00, 0x00ff00)
     basic.showLeds(`
@@ -71,11 +76,13 @@ radio.onReceivedMessage(RadioMessage.Alarm1, function () {
     music.playMelody("C5 - C5 - - - - - ", 322)
 })
 radio.onReceivedMessage(RadioMessage.Alarmstate0, function () {
-    basic.showIcon(IconNames.Heart)
-    basic.pause(1000)
-    basic.clearScreen()
-    control.reset()
+    if (MFRC522.getID() == 420) {
+        radio.sendMessage(RadioMessage.Pairverify)
+    }
 })
+/**
+ * Power On
+ */
 radio.setGroup(1)
 radio.setTransmitPower(7)
 MFRC522.Init(
@@ -93,6 +100,11 @@ basic.showLeds(`
     . . . . .
     . . # . .
     `)
+/**
+ * Deactivate alarm with RFID chip
+ * 
+ * (Chip has to be registerd)
+ */
 basic.forever(function () {
     if (MFRC522.getID() == 420) {
         radio.sendMessage(RadioMessage.Alarmstate0)
