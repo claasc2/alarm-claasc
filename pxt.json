@@ -1,0 +1,43 @@
+{
+    "name": "Alarm claasc",
+    "description": "",
+    "dependencies": {
+        "core": "*",
+        "pxt-rfid-rc522": "github:CalliTGS3/pxt-rfid-rc522#6fd2292a4639afbd54cbe127ee6e32f2a7a75257",
+        "radio-broadcast": "*",
+        "warte bis...": "github:calliope-edu/warte-bis#208c664d13fa2cd76d976828347fd2d9dd5fa725",
+        "v3": "*"
+    },
+    "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md",
+        "main.py"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "targetVersions": {
+        "branch": "v6.0.28",
+        "tag": "v6.0.28",
+        "commits": "https://github.com/microsoft/pxt-calliope/commits/0de6e9a3947686a88380ad08ae6ee4c926ca5b19",
+        "target": "6.0.28",
+        "pxt": "9.0.15",
+        "targetId": "calliopemini"
+    },
+    "supportedTargets": [
+        "calliopemini"
+    ],
+    "preferredEditor": "blocksprj",
+    "yotta": {
+        "config": {
+            "microbit-dal": {
+                "bluetooth": {
+                    "open": 0,
+                    "security_level": "SECURITY_MODE_ENCRYPTION_NO_MITM",
+                    "whitelist": 1
+                }
+            }
+        }
+    }
+}
