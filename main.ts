@@ -5,9 +5,18 @@ enum RadioMessage {
     Alarmstate0 = 7740,
     Pairverify = 63623
 }
+/**
+ * Power On
+ */
+/**
+ * Alarm getting rdy
+ */
 input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
     radio.sendMessage(RadioMessage.Alarm1)
 })
+/**
+ * Alarm On
+ */
 radio.onReceivedMessage(RadioMessage.Alarm2, function () {
     basic.setLedColor(0xff0000)
     basic.showLeds(`
@@ -41,9 +50,6 @@ input.onGesture(Gesture.Shake, function () {
         control.reset()
     }
 })
-/**
- * Alarm getting rdy
- */
 radio.onReceivedMessage(RadioMessage.Alarm1, function () {
     basic.setLedColors(0xff0000, 0x00ff00, 0x00ff00)
     basic.showLeds(`
@@ -80,9 +86,6 @@ radio.onReceivedMessage(RadioMessage.Alarmstate0, function () {
         radio.sendMessage(RadioMessage.Pairverify)
     }
 })
-/**
- * Power On
- */
 radio.setGroup(1)
 radio.setTransmitPower(7)
 MFRC522.Init(
