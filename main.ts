@@ -17,6 +17,11 @@ input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
 /**
  * Alarm On
  */
+/**
+ * Deactivate alarm with RFID chip
+ * 
+ * (Chip has to be registerd)
+ */
 radio.onReceivedMessage(RadioMessage.Alarm2, function () {
     basic.setLedColor(0xff0000)
     basic.showLeds(`
@@ -34,11 +39,16 @@ radio.onReceivedMessage(RadioMessage.Pairverify, function () {
     basic.clearScreen()
     control.reset()
 })
+/**
+ * How to Register Chip
+ */
 input.onGesture(Gesture.Shake, function () {
     basic.showIcon(IconNames.Cow)
     MFRC522.write("420")
     if (MFRC522.testID() == 420) {
         basic.showIcon(IconNames.Yes)
+        basic.pause(2000)
+        control.reset()
     } else {
         basic.showLeds(`
             # . . . #
@@ -84,6 +94,8 @@ radio.onReceivedMessage(RadioMessage.Alarm1, function () {
 radio.onReceivedMessage(RadioMessage.Alarmstate0, function () {
     if (MFRC522.getID() == 420) {
         radio.sendMessage(RadioMessage.Pairverify)
+        basic.pause(2000)
+        control.reset()
     }
 })
 radio.setGroup(1)
@@ -103,11 +115,6 @@ basic.showLeds(`
     . . . . .
     . . # . .
     `)
-/**
- * Deactivate alarm with RFID chip
- * 
- * (Chip has to be registerd)
- */
 basic.forever(function () {
     if (MFRC522.getID() == 420) {
         radio.sendMessage(RadioMessage.Alarmstate0)
