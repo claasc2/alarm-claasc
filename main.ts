@@ -4,9 +4,6 @@ enum RadioMessage {
     Alarm2 = 41318,
     Alarmstate0 = 7740
 }
-function macheEtwas () {
-	
-}
 input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
     radio.sendMessage(RadioMessage.Alarm1)
 })
