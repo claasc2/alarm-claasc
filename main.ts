@@ -39,13 +39,18 @@ radio.onReceivedMessage(RadioMessage.Pairverify, function () {
     basic.clearScreen()
     control.reset()
 })
+input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
+    radio.sendMessage(RadioMessage.Pairverify)
+    basic.showIcon(IconNames.Heart)
+    control.reset()
+})
 /**
  * How to Register Chip
  */
 input.onGesture(Gesture.Shake, function () {
     basic.showIcon(IconNames.Cow)
-    MFRC522.write("420")
-    if (MFRC522.testID() == 420) {
+    if (MFRC522.testID() != 420) {
+        MFRC522.write("420")
         basic.showIcon(IconNames.Yes)
         basic.pause(2000)
         control.reset()
@@ -116,7 +121,7 @@ basic.showLeds(`
     . . # . .
     `)
 basic.forever(function () {
-    if (MFRC522.getID() == 420) {
+    if (MFRC522.read() == 420) {
         radio.sendMessage(RadioMessage.Alarmstate0)
     }
     if (MFRC522.getID() < 419) {
