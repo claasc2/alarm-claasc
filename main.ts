@@ -10,7 +10,9 @@ enum RadioMessage {
     ALARMALARM = 20045
 }
 /**
- * Power On
+ * Deactivate alarm with RFID chip
+ * 
+ * (Chip has to be registerd)
  */
 radio.onReceivedMessage(RadioMessage.Alarmoffreset, function () {
     basic.showIcon(IconNames.Heart)
@@ -20,11 +22,6 @@ radio.onReceivedMessage(RadioMessage.Alarmoffreset, function () {
 })
 /**
  * Alarm On
- */
-/**
- * Deactivate alarm with RFID chip
- * 
- * (Chip has to be registerd)
  */
 radio.onReceivedMessage(RadioMessage.AlarmscharfR, function () {
     basic.setLedColor(0xff0000)
@@ -37,9 +34,6 @@ radio.onReceivedMessage(RadioMessage.AlarmscharfR, function () {
         `)
     music.playMelody("C5 - C5 - - - - - ", 120)
     Alarmscharf = 1
-})
-input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
-    radio.sendMessage(RadioMessage.Alarm1)
 })
 radio.onReceivedMessage(RadioMessage.ALARMALARM, function () {
     for (let index = 0; index < 10; index++) {
@@ -84,9 +78,14 @@ radio.onReceivedMessage(RadioMessage.Alarmscharf, function () {
     music.playMelody("C5 - C5 - - - - - ", 322)
     Alarmscharf = 1
 })
+/**
+ * Power On
+ */
 let Alarmscharf = 0
+led.setBrightness(255)
 Alarmscharf = 0
 radio.setGroup(1)
+radio.setFrequencyBand(83)
 radio.setTransmitPower(7)
 MFRC522.Init(
 DigitalPin.C9,
