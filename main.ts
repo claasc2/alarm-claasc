@@ -93,10 +93,10 @@ radio.onReceivedMessage(RadioMessage.Alarm1, function () {
         # # # # #
         # # # # #
         `)
+    music.playMelody("C5 - C5 - - - - - ", 322)
     Alarmscharf = 1
     radio.sendMessage(RadioMessage.Alarmscharf)
     basic.pause(1000)
-    music.playMelody("C5 - C5 - - - - - ", 322)
 })
 radio.onReceivedMessage(RadioMessage.Alarmstate0, function () {
     if (MFRC522.getID() == 420) {
@@ -124,6 +124,13 @@ basic.showLeds(`
     . . . . .
     . . # . .
     `)
+loops.everyInterval(500, function () {
+    if (Alarmscharf == 1) {
+        if (input.soundLevel() > 70) {
+            music.playMelody("C5 - C5 - C5 - C5 - ", 120)
+        }
+    }
+})
 basic.forever(function () {
     if (MFRC522.getID() == 420) {
         radio.sendMessage(RadioMessage.Alarmstate0)
@@ -153,12 +160,5 @@ basic.forever(function () {
         basic.pause(1000)
         basic.clearScreen()
         music.stopAllSounds()
-    }
-})
-basic.forever(function () {
-    if (Alarmscharf == 1) {
-        if (true) {
-        	
-        }
     }
 })
