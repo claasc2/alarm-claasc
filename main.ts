@@ -4,14 +4,18 @@ enum RadioMessage {
     Alarm2 = 41318,
     Alarmstate0 = 7740,
     Pairverify = 63623,
-    Alarmscharf = 54702
+    Alarmscharf = 54702,
+    Alarmoffreset = 15307
 }
 /**
  * Power On
  */
-/**
- * Alarm getting rdy
- */
+radio.onReceivedMessage(RadioMessage.Alarmoffreset, function () {
+    basic.showIcon(IconNames.Heart)
+    basic.pause(1000)
+    basic.clearScreen()
+    control.reset()
+})
 input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
     radio.sendMessage(RadioMessage.Alarm1)
 })
@@ -33,17 +37,10 @@ radio.onReceivedMessage(RadioMessage.Alarm2, function () {
         # # # # #
         `)
     music.playMelody("C5 - C5 - - - - - ", 120)
-})
-radio.onReceivedMessage(RadioMessage.Pairverify, function () {
-    basic.showIcon(IconNames.Heart)
-    basic.pause(1000)
-    basic.clearScreen()
-    control.reset()
+    Alarmscharf = 1
 })
 input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
-    radio.sendMessage(RadioMessage.Pairverify)
-    basic.showIcon(IconNames.Heart)
-    control.reset()
+    radio.sendMessage(RadioMessage.Alarmscharf)
 })
 /**
  * How to Register Chip
@@ -66,7 +63,10 @@ input.onGesture(Gesture.Shake, function () {
         control.reset()
     }
 })
-radio.onReceivedMessage(RadioMessage.Alarm1, function () {
+/**
+ * Alarm getting rdy
+ */
+radio.onReceivedMessage(RadioMessage.Alarmscharf, function () {
     basic.setLedColors(0xff0000, 0x00ff00, 0x00ff00)
     basic.showLeds(`
         # # . . .
@@ -93,17 +93,10 @@ radio.onReceivedMessage(RadioMessage.Alarm1, function () {
         # # # # #
         # # # # #
         `)
+    radio.sendMessage(RadioMessage.Alarm2)
+    basic.pause(5000)
     music.playMelody("C5 - C5 - - - - - ", 322)
     Alarmscharf = 1
-    radio.sendMessage(RadioMessage.Alarmscharf)
-    basic.pause(1000)
-})
-radio.onReceivedMessage(RadioMessage.Alarmstate0, function () {
-    if (MFRC522.getID() == 420) {
-        radio.sendMessage(RadioMessage.Pairverify)
-        basic.pause(2000)
-        control.reset()
-    }
 })
 let Alarmscharf = 0
 Alarmscharf = 0
@@ -132,23 +125,13 @@ loops.everyInterval(500, function () {
     }
 })
 basic.forever(function () {
-    if (MFRC522.getID() == 420) {
-        radio.sendMessage(RadioMessage.Alarmstate0)
+    if (MFRC522.getID() == 14197263231) {
+        radio.sendMessage(RadioMessage.Alarmoffreset)
+        basic.showIcon(IconNames.Heart)
+        basic.pause(2000)
+        control.reset()
     }
-    if (MFRC522.getID() < 419) {
-        basic.showLeds(`
-            # . . . #
-            . # . # .
-            . . # . .
-            . # . # .
-            # . . . #
-            `)
-        music.ringTone(131)
-        basic.pause(1000)
-        basic.clearScreen()
-        music.stopAllSounds()
-    }
-    if (MFRC522.getID() > 421) {
+    if (MFRC522.getID() != 14197263231) {
         basic.showLeds(`
             # . . . #
             . # . # .
