@@ -3,7 +3,8 @@ enum RadioMessage {
     Alarm1 = 42306,
     Alarm2 = 41318,
     Alarmstate0 = 7740,
-    Pairverify = 63623
+    Pairverify = 63623,
+    Alarmscharf = 54702
 }
 /**
  * Power On
@@ -92,7 +93,8 @@ radio.onReceivedMessage(RadioMessage.Alarm1, function () {
         # # # # #
         # # # # #
         `)
-    radio.sendMessage(RadioMessage.Alarm2)
+    Alarmscharf = 1
+    radio.sendMessage(RadioMessage.Alarmscharf)
     basic.pause(1000)
     music.playMelody("C5 - C5 - - - - - ", 322)
 })
@@ -103,6 +105,8 @@ radio.onReceivedMessage(RadioMessage.Alarmstate0, function () {
         control.reset()
     }
 })
+let Alarmscharf = 0
+Alarmscharf = 0
 radio.setGroup(1)
 radio.setTransmitPower(7)
 MFRC522.Init(
@@ -121,7 +125,7 @@ basic.showLeds(`
     . . # . .
     `)
 basic.forever(function () {
-    if (MFRC522.read() == 420) {
+    if (MFRC522.getID() == 420) {
         radio.sendMessage(RadioMessage.Alarmstate0)
     }
     if (MFRC522.getID() < 419) {
@@ -149,5 +153,12 @@ basic.forever(function () {
         basic.pause(1000)
         basic.clearScreen()
         music.stopAllSounds()
+    }
+})
+basic.forever(function () {
+    if (Alarmscharf == 1) {
+        if (true) {
+        	
+        }
     }
 })
