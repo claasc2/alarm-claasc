@@ -5,7 +5,9 @@ enum RadioMessage {
     Alarmstate0 = 7740,
     Pairverify = 63623,
     Alarmscharf = 54702,
-    Alarmoffreset = 15307
+    Alarmoffreset = 15307,
+    AlarmscharfR = 44234,
+    ALARMALARM = 20045
 }
 /**
  * Power On
@@ -16,9 +18,6 @@ radio.onReceivedMessage(RadioMessage.Alarmoffreset, function () {
     basic.clearScreen()
     control.reset()
 })
-input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
-    radio.sendMessage(RadioMessage.Alarm1)
-})
 /**
  * Alarm On
  */
@@ -27,7 +26,7 @@ input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
  * 
  * (Chip has to be registerd)
  */
-radio.onReceivedMessage(RadioMessage.Alarm2, function () {
+radio.onReceivedMessage(RadioMessage.AlarmscharfR, function () {
     basic.setLedColor(0xff0000)
     basic.showLeds(`
         # # # # #
@@ -39,29 +38,16 @@ radio.onReceivedMessage(RadioMessage.Alarm2, function () {
     music.playMelody("C5 - C5 - - - - - ", 120)
     Alarmscharf = 1
 })
+input.onButtonEvent(Button.A, input.buttonEventClick(), function () {
+    radio.sendMessage(RadioMessage.Alarm1)
+})
+radio.onReceivedMessage(RadioMessage.ALARMALARM, function () {
+    for (let index = 0; index < 10; index++) {
+        music.playMelody("C5 - C5 - C5 - C5 - ", 120)
+    }
+})
 input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
     radio.sendMessage(RadioMessage.Alarmscharf)
-})
-/**
- * How to Register Chip
- */
-input.onGesture(Gesture.Shake, function () {
-    basic.showIcon(IconNames.Cow)
-    if (MFRC522.testID() != 420) {
-        MFRC522.write("420")
-        basic.showIcon(IconNames.Yes)
-        basic.pause(2000)
-        control.reset()
-    } else {
-        basic.showLeds(`
-            # . . . #
-            . # . # .
-            . . # . .
-            . # . # .
-            # . . . #
-            `)
-        control.reset()
-    }
 })
 /**
  * Alarm getting rdy
@@ -93,7 +79,7 @@ radio.onReceivedMessage(RadioMessage.Alarmscharf, function () {
         # # # # #
         # # # # #
         `)
-    radio.sendMessage(RadioMessage.Alarm2)
+    radio.sendMessage(RadioMessage.AlarmscharfR)
     basic.pause(5000)
     music.playMelody("C5 - C5 - - - - - ", 322)
     Alarmscharf = 1
@@ -120,7 +106,10 @@ basic.showLeds(`
 loops.everyInterval(500, function () {
     if (Alarmscharf == 1) {
         if (input.soundLevel() > 70) {
-            music.playMelody("C5 - C5 - C5 - C5 - ", 120)
+            for (let index = 0; index < 10; index++) {
+                radio.sendMessage(RadioMessage.ALARMALARM)
+                music.playMelody("C5 - C5 - C5 - C5 - ", 120)
+            }
         }
     }
 })
