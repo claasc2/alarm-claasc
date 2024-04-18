@@ -9,15 +9,14 @@ enum RadioMessage {
     AlarmscharfR = 44234,
     ALARMALARM = 20045
 }
+// Alarm off / Restart
 radio.onReceivedMessage(RadioMessage.Alarmoffreset, function () {
     basic.showIcon(IconNames.Heart)
     basic.pause(1000)
     basic.clearScreen()
     control.reset()
 })
-/**
- * Alarm On
- */
+// 2nd system will Arm
 radio.onReceivedMessage(RadioMessage.AlarmscharfR, function () {
     basic.setLedColor(0xff0000)
     basic.showLeds(`
@@ -30,20 +29,18 @@ radio.onReceivedMessage(RadioMessage.AlarmscharfR, function () {
     music.playMelody("C5 - C5 - - - - - ", 120)
     Alarmscharf = 1
 })
+// ALARM ALARM
+// If the system receives this message, the alarm will go off 
 radio.onReceivedMessage(RadioMessage.ALARMALARM, function () {
     for (let index = 0; index < 10; index++) {
         music.playMelody("C5 - C5 - C5 - C5 - ", 120)
     }
 })
-/**
- * Arm system
- */
+// Arm system
 input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
     radio.sendMessage(RadioMessage.Alarmscharf)
 })
-/**
- * Alarm getting rdy
- */
+// System Arming
 radio.onReceivedMessage(RadioMessage.Alarmscharf, function () {
     basic.setLedColors(0xff0000, 0x00ff00, 0x00ff00)
     basic.showLeds(`
@@ -76,9 +73,10 @@ radio.onReceivedMessage(RadioMessage.Alarmscharf, function () {
     music.playMelody("C5 - C5 - - - - - ", 322)
     Alarmscharf = 1
 })
-/**
- * Power On
- */
+// Power on
+// RFID Reader starts
+// ans does a self test
+// Green Led = Everything is in order
 let Alarmscharf = 0
 led.setBrightness(255)
 Alarmscharf = 0
@@ -100,6 +98,7 @@ basic.showLeds(`
     . . . . .
     . . # . .
     `)
+// Alarm Siren sound
 loops.everyInterval(500, function () {
     if (Alarmscharf == 1) {
         if (input.soundLevel() > 70) {
@@ -110,11 +109,8 @@ loops.everyInterval(500, function () {
         }
     }
 })
-/**
- * Deactivate alarm with RFID chip
- * 
- * (Chip has to be registerd)
- */
+// Deactivate alarm with RFID chip
+// (Chip has to be registerd)
 basic.forever(function () {
     if (MFRC522.getID() == 14197263231) {
         radio.sendMessage(RadioMessage.Alarmoffreset)
