@@ -78,6 +78,7 @@ radio.onReceivedMessage(RadioMessage.Alarmscharf, function () {
 // ans does a self test
 // Green Led = Everything is in order
 let Alarmscharf = 0
+music.setVolume(255)
 led.setBrightness(255)
 Alarmscharf = 0
 radio.setGroup(1)
