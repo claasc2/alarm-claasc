@@ -9,11 +9,6 @@ enum RadioMessage {
     AlarmscharfR = 44234,
     ALARMALARM = 20045
 }
-/**
- * Deactivate alarm with RFID chip
- * 
- * (Chip has to be registerd)
- */
 radio.onReceivedMessage(RadioMessage.Alarmoffreset, function () {
     basic.showIcon(IconNames.Heart)
     basic.pause(1000)
@@ -40,6 +35,9 @@ radio.onReceivedMessage(RadioMessage.ALARMALARM, function () {
         music.playMelody("C5 - C5 - C5 - C5 - ", 120)
     }
 })
+/**
+ * Arm system
+ */
 input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
     radio.sendMessage(RadioMessage.Alarmscharf)
 })
@@ -112,6 +110,11 @@ loops.everyInterval(500, function () {
         }
     }
 })
+/**
+ * Deactivate alarm with RFID chip
+ * 
+ * (Chip has to be registerd)
+ */
 basic.forever(function () {
     if (MFRC522.getID() == 14197263231) {
         radio.sendMessage(RadioMessage.Alarmoffreset)
